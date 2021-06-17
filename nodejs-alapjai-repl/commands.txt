@@ -1,0 +1,6 @@
+node -v // version of node
+npm -v // version of npm
+npm ls --depth=0 // installed package dependencies - first level
+npm outdated // list updateable packages; different from node --pending-deprecation
+npm update // update packages if possible
+npx view eslint //aliases: info show v // view details of eslint package
