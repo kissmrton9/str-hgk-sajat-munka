@@ -1,3 +1,4 @@
+*.codelite
 *.workspace
 .tern-*
 node_modules
