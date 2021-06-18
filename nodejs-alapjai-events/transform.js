@@ -11,7 +11,7 @@ const options={
 function transform(str,isSpace){
 //      Ha szókarakter előtt nem szókarakter szerepel, akkor alakítsa nagybetűsre.
 //      Probléma: kötőjeles szavak, elválasztott szavak 
-    result = str.replace(/[^\wáÁéÉíÍóÓöÖőŐúÚüÜűŰ][\wáÁéÉíÍóÓöÖőŐúÚüÜűŰ]/g, x => x.toUpperCase());
+    let result = str.replace(/[^\wáÁéÉíÍóÓöÖőŐúÚüÜűŰ][\wáÁéÉíÍóÓöÖőŐúÚüÜűŰ]/g, x => x.toUpperCase());
 //    Az első karaktert attól függően alakítjuk nagybetűsre, hogy szókezdő karakter-e
     return isSpace ? result.charAt(0).toUpperCase() + result.slice(1) : result;
 };
@@ -54,9 +54,16 @@ function copyAndTransform(file,transform){
 //            );
 //        });
 
-//        Ha minden adatot kiolvastunk, és kiírni is sikerült, akkor siker
+//        Ha minden adatot kiolvastunk,
         s.on('end', () => {
-            ws.end('',options.encoding,() => logger.success('\n'+ 'File transform successful.' + '\n'));
+            if(!ws.write('', options)){ // de kiírni még nem sikerült,
+                ws.on('drain',()=> // akkor várjuk meg, míg kiíródik, és siker
+                    ws.end('',options.encoding,() => logger.success('\n'+ 'File transform successful.' + '\n'))
+                )    
+            }
+            else { //  és kiírni is sikerült, akkor siker
+                ws.end('',options.encoding,() => logger.success('\n'+ 'File transform successful.' + '\n'));
+            }
         });
 
 //        Így is meg lehetne oldani a befejezést;
@@ -72,6 +79,12 @@ function copyAndTransform(file,transform){
     }
     catch(err){
         logger.error('\n' + err + '\n');
+        try{
+            ws.end();
+        }
+        catch(err){
+            logger.error('\n' + err + '\n');
+        }
     };
 }
 
