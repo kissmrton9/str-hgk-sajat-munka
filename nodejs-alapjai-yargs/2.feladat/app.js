@@ -1,5 +1,5 @@
 const yargs = require('yargs');
-const products = require ('./productFactory');
+const products = require ('./products.json'); // simpler but caches products.json
 
 function totalPrice(products){
     let sum = 0;
@@ -42,6 +42,11 @@ yargs
         command: 'lessthan',
         describe: 'List products of which less than count is available',
         builder: {count: {alias: 'c', type: 'number', demandOption: true}}, //local option only for command lessthan
+        // also works if we defined first 
+        // const count = {alias: 'c', type: 'number', demandOption: true};
+        // and then
+        // builder: {count},
+        // this makes possible to refactor
         handler: ({count}) => lessThanCountAvailable(products,count)
     })
 //    .middleware(callbacks, [applyBeforeValidation]) // to set environment before command execution
