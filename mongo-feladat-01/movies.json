@@ -1,0 +1,52 @@
+[
+  {
+    "title": "Titanic",
+    "category": "romantic",
+    "director": "James Cameron"
+  },
+  {
+    "title": "The Terminator",
+    "category": "action",
+    "director": "James Cameron"
+  },
+  {
+    "title": "Unforgiven",
+    "category": "action",
+    "director": "Clint Eastwood"
+  },
+  {
+    "title": "High Plains Drifter",
+    "category": "action",
+    "director": "Clint Eastwood"
+  },
+  {
+    "title": "Million Dollar Baby",
+    "category": "action",
+    "director": "Clint Eastwood",
+  },
+  {
+    "title": "The Bridges of Madison County",
+    "category": "romantic",
+    "director": "Clint Eastwood"
+  },
+  {
+    "title": "E.T. The Extra-Terrestrial",
+    "category": "fantasy",
+    "director": "Steven Spielberg"
+  },
+  {
+    "title": "Jurassic Park",
+    "category": "fantasy",
+    "director": "Steven Spielberg"
+  },
+  {
+    "title": "Saving Private Ryan",
+    "category": "action",
+    "director": "Steven Spielberg"
+  },
+  {
+    "title": "Catch Me if You Can",
+    "category": "romantic",
+    "director": "Steven Spielberg"
+  }
+]

@@ -1,3 +1,5 @@
+*.gitignore
+*.directory
 *.codelite
 *.workspace
 .tern-*
