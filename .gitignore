@@ -1,6 +1,1 @@
-*.gitignore
-*.directory
-*.codelite
-*.workspace
-.tern-*
 node_modules

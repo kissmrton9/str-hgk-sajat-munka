@@ -1,0 +1,36 @@
+use videoStore // set db to videoStore (or create it)
+db.movies.insert([   {     "_id": 1,     "title": "Titanic",     "category": "romantic",     "director": "James Cameron"   },   {     "_id": 2,     "title": "The Terminator",     "category": "action",     "director": "James Cameron"   },   {     "_id": 3,     "title": "Unforgiven",     "category": "action",     "director": "Clint Eastwood"   },   {     "_id": 4,     "title": "High Plains Drifter",     "category": "action",     "director": "Clint Eastwood"   },   {     "_id": 5,     "title": "Million Dollar Baby",     "category": "action",     "director": "Clint Eastwood",   },   {     "_id": 6,     "title": "The Bridges of Madison County",     "category": "romantic",     "director": "Clint Eastwood"   },   {     "_id": 7,     "title": "E.T. The Extra-Terrestrial",     "category": "fantasy",     "director": "Steven Spielberg"   },   {     "_id": 8,     "title": "Jurassic Park",     "category": "fantasy",     "director": "Steven Spielberg"   },   {     "_id": 9,     "title": "Saving Private Ryan",     "category": "action",     "director": "Steven Spielberg"   },   {     "_id": 10,     "title": "Catch Me if You Can",     "category": "romantic",     "director": "Steven Spielberg"   } ]) // create new documents in the collection "movies"
+db.movies.updateMany({},{$set:{"ratings":[]}}) // Add new property "ratings" to all document
+db.movies.findOne({ratings:[]}) // Find next document without ratings
+db.movies.updateOne({_id:ObjectId("60dee9241b0d00b6a7434e36")},{$push:{ratings: 5}}) // add a rating 5 to the document with given _id
+db.movies.updateMany({},{$set:{"releaseYear":2000}}) // Add new property "releaseYear" to all document with default value 2000
+db.movies.updateMany( {}, [{$set: {title: {$toUpper: "$title"} }}] ) // Convert property "title" to uppercase
+db.movies.updateOne({},{$set: {releaseYear: 1997} }) // set releaseYear of the first movie, TITANIC
+db.movies.updateOne({title:"THE TERMINATOR"},{$set: {releaseYear: 1984} }) // set releaseYear
+db.movies.updateOne({title:"UNFORGIVEN"},{$set: {releaseYear: 1992} }) // set releaseYear
+db.movies.updateOne({title:"HIGH PLAINS DRIFTER"},{$set: {releaseYear: 1973} }) // set releaseYear
+db.movies.updateOne({title:"MILLION DOLLAR BABY"},{$set: {releaseYear: 2004} }) // set releaseYear
+db.movies.updateOne({title:"THE BRIDGES OF MADISON COUNTRY"},{$set: {releaseYear: 1995} }) // set releaseYear
+db.movies.updateOne({title:"E.T. THE EXTRA-TERRESTRIAL"},{$set: {releaseYear: 1982} }) // set releaseYear
+db.movies.updateOne({title:"SAVING PRIVATE RYAN"},{$set: {releaseYear: 1998} }) // set releaseYear
+db.movies.updateOne({title:"CATCH ME IF YOU CAN"},{$set: {releaseYear: 2002} }) // set releaseYear
+
+------------------------
+
+db.directors.insertOne(   {     "_id": 1,     "name": "James Cameron",     "birthYear": 1958,     "movies": []   }) // create collection "directors" and insert a director.
+db.directors.insertOne(  {     "_id": 2,     "name": "Clint Eastwood",     "birthYear": 1935,     "movies": []   }) // insert a second director
+db.directors.insertOne(  {     "_id": 3,     "name": "Steven Spielberg",     "birthYear": 1930,     "movies": []   } ) // insert a third director
+db.directors.updateOne({name:"James Cameron"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e35")}}) // add a Cameron's movie
+db.directors.updateOne({name:"James Cameron"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e36")}}) // add a Cameron's movie
+db.directors.updateOne({name:"Clint Eastwood"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e37")}}) // add an Eastwood's movie
+db.directors.updateOne({name:"Clint Eastwood"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e38")}}) // add an Eastwood's movie
+db.directors.updateOne({name:"Clint Eastwood"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e39")}}) // add an Eastwood's movie
+db.directors.updateOne({name:"Clint Eastwood"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e3a")}}) // add an Eastwood's movie
+db.directors.updateOne({name:"Steven Spielberg"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e3b")}}) // add a Spielberg's movie
+db.directors.updateOne({name:"Steven Spielberg"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e3c")}}) // add a Spielberg's movie
+db.directors.updateOne({name:"Steven Spielberg"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e3d")}}) // add a Spielberg's movie
+db.directors.updateOne({name:"Steven Spielberg"},{$push:{movies:ObjectId("60dee9241b0d00b6a7434e3e")}}) // add a Spielberg's movie
+db.movies.updateMany({},{$unset:{director:''}}) // unset director field in movies collection
+db.movies.find({$and: [{releaseYear:{$gt:1985}},{releaseYear:{$lt:1997}}]}) // find movies between 1986 and 1996
+db.movies.find({$and: [{releaseYear:{$gt:1985}},{releaseYear:{$lt:1997}},{category:{$ne:"fantasy"}}]}) // find movies between 1986 and 1996 where category is different from fantasy
+
