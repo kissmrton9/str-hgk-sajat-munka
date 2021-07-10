@@ -1,0 +1,173 @@
+// prerequisites
+db.createCollection("cinemas", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: [ "_id", "name", "movies", "address" ],
+            properties: {
+                _id: {
+                    bsonType: "int", // and must use NumberInt(int) in documents
+                    // minimum: 2017,
+                    // maximum: 3017,
+                    description: "must be an integer and is required"
+                    },
+                name: {
+                    bsonType: "string",
+                    pattern: "^[a-zA-Z0-9 áÁéÉíÍóÓöÖőŐúÚüÜűŰ-]+$", // - is also required
+                    // do not use "/exp/", only "exp"
+                    // important to use "^...exp...$" as the entire propName must match
+                    description: "must be a string containing only numbers, letters and space; it is required"
+                },
+                movies: {
+                    bsonType: "array",
+                    description: "must be an array and is required"
+                },
+                address: {
+                    bsonType: "object",
+                    required: [ "city" ]
+                }
+            }
+        }
+    }
+})
+
+1.
+// create cinemas
+db.cinemas.insertOne({_id: 1, name: "Uránia Nemzeti Filmszínház", movies: [], address: {city: Budapest}})
+db.cinemas.insertOne({"_id": NumberInt(2), "name": "Sci-Fi Dine-In Theater Restaurant", "movies": [], "address": {"city": "Orlando"}})
+db.cinemas.insertOne({"_id": NumberInt(3), "name": "Cinema dei Piccoli", "movies": [], "address": {"city": "Roma"}})
+// fill in them with movies
+let idArr = db.movies.find({},{_id:1}).toArray().map(item => item._id)
+let arr
+arr = idArr.filter(item => Math.random() > 0.4)
+db.cinemas.updateOne({"_id":1},{$set:{movies:arr}})
+arr = idArr.filter(item => Math.random() > 0.4)
+db.cinemas.updateOne({"_id":2},{$set:{movies:arr}})
+arr = idArr.filter(item => Math.random() > 0.4)
+db.cinemas.updateOne({"_id":3},{$set:{movies:arr}})
+
+2.
+db.cinemas.aggregate([ // aggregate argumentumai a végrehajtandó műveletek, az ún. "Aggregation Pipeline Stages". Megadhatók sorozatban vagy tömbben, lehet vegyesen is.
+    {$match:{"_id":1}}, // megszorítás: az _id értéke legyen 1
+    {$lookup:{ // egészítse ki a lekérdezés eredményét
+        from: "movies", // a movies kollekcióból
+        localField:"movies",// a cinemas kollekció movies mezője (vagy ha tömb, akkor egy futó eleme)
+        foreignField:"_id", // legyen ugyanaz, mint a movies kollekció _id mezője
+        as:"movies" // az így kiválasztott dokumentum legyen a movies kulcs értéke. Figyelem: a cinemas kollekciónak már van movies kulcsa, így annak értéke felülíródik, de pont ezt szeretnénk.
+    }},
+// Az unwind && replaceRoot stages helyett buhera:
+// ]).map(item => item.movies)[0] // csak a movies tulajdonságra vagyok kíváncsi; a map valamiért beágyazott tömböt ad vissza
+    {$unwind:"$movies"}, // megsokszoroz minden dokumentumot, mindegyikben a movies kulcs az eredeti movies kulcstömb egy futó eleme // otherwise the next step won't work // notice the $ sign before movies
+    {$replaceRoot: {newRoot:"$movies"}}, // select only the value of the prop movies; must be an object // notice the $ sign before movies
+])
+
+3.
+db.cinemas.aggregate([ // aggregate argumentumai a végrehajtandó műveletek, az ún. "Aggregation Pipeline Stages". Megadhatók sorozatban vagy tömbben, lehet vegyesen is.
+    {$match:{"_id":1}}, // megszorítás: az _id értéke legyen 1
+    {$lookup:{ // egészítse ki a lekérdezés eredményét
+        from: "movies", // a movies kollekcióból
+        localField:"movies",// a cinemas kollekció movies mezője (vagy ha tömb, akkor egy futó eleme)
+        foreignField:"_id", // legyen ugyanaz, mint a movies kollekció _id mezője
+        as:"movies" // az így kiválasztott dokumentum legyen a movies kulcs értéke. Figyelem: a cinemas kollekciónak már van movies kulcsa, így annak értéke felülíródik, de pont ezt szeretnénk.
+    }},
+// Az unwind && replaceRoot stages helyett buhera:
+// ]).map(item => item.movies)[0] // csak a movies tulajdonságra vagyok kíváncsi; a map valamiért beágyazott tömböt ad vissza
+    {$unwind:"$movies"}, // megsokszoroz minden dokumentumot, mindegyikben a movies kulcs az eredeti movies kulcstömb egy futó eleme // otherwise the next step won't work // notice the $ sign before movies
+    {$replaceRoot: {newRoot:"$movies"}}, // select only the value of the prop movies; must be an object // notice the $ sign before movies
+    {$project:{_id:0}},
+])
+
+4.
+
+5.
+// almost literally the same as 2 except the collection name is directors instead of cinemas
+db.directors.aggregate([ // aggregate argumentumai a végrehajtandó műveletek, az ún. "Aggregation Pipeline Stages". Megadhatók sorozatban vagy tömbben, lehet vegyesen is.
+    {$match:{"name":"Clint Eastwood"}}, // megszorítás
+    {$lookup:{ // egészítse ki a lekérdezés eredményét
+        from: "movies", // a movies kollekcióból
+        localField:"movies",// a directors kollekció movies mezője (vagy ha tömb, akkor egy futó eleme)
+        foreignField:"_id", // legyen ugyanaz, mint a movies kollekció _id mezője
+        as:"movies" // az így kiválasztott dokumentum legyen a movies kulcs értéke. Figyelem: a directors kollekciónak már van movies kulcsa, így annak értéke felülíródik, de pont ezt szeretnénk.
+    }},
+// Az unwind && replaceRoot stages helyett buhera:
+// ]).map(item => item.movies)[0] // csak a movies tulajdonságra vagyok kíváncsi; a map valamiért beágyazott tömböt ad vissza
+    {$unwind:"$movies"}, // megsokszoroz minden dokumentumot, mindegyikben a movies kulcs az eredeti movies kulcstömb egy futó eleme // otherwise the next step won't work // notice the $ sign before movies
+    {$replaceRoot: {newRoot:"$movies"}}, // select only the value of the prop movies; must be an object // notice the $ sign before movies
+])
+
+6.
+db.directors.aggregate([ // aggregate argumentumai a végrehajtandó műveletek, az ún. "Aggregation Pipeline Stages". Megadhatók sorozatban vagy tömbben, lehet vegyesen is.
+    {$match:{"name":"Steven Spielberg"}}, // megszorítás
+    {$lookup:{ // egészítse ki a lekérdezés eredményét
+        from: "movies", // a movies kollekcióból
+        localField:"movies",// a directors kollekció movies mezője (vagy ha tömb, akkor egy futó eleme)
+        foreignField:"_id", // legyen ugyanaz, mint a movies kollekció _id mezője
+        // Itt az eltérés, itt változtatjuk meg a kulcsnevet!
+        as:"movieTitles" // az így kiválasztott dokumentum legyen a movieTitles kulcs értéke.
+    }},
+    {$project: {_id:0,name:1,movieTitles:{title:1}}}, // select only the value of the props:1
+    //{$project: {_id:0,name:1,"movieTitles.title":1}}, // also possible
+]).pretty() // looks prettier
+
+7.
+db.movies.aggregate([ // aggregate argumentumai a végrehajtandó műveletek, az ún. "Aggregation Pipeline Stages". Megadhatók sorozatban vagy tömbben, lehet vegyesen is.
+    {$set: {rateAvg: // add a new field rateAvg
+        {$avg:"$ratings"}, // as the average of the array of ratings; notice the $
+    }},
+    {$project: {_id:0,title:1,rateAvg:1}}, // select only the value of the props:1
+    {$sort: {rateAvg:-1}}, // sort by rateAvg in descending order
+])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.
+use videoStore
+2.
+db.movies.find({category:{$ne:"fantasy"}}).count() // action és romantic típusú filmek száma összesen
+3.
+let fantasies = db.movies.find({category:"fantasy"},{_id:0,category:1,title:1}) // save a cursor with elements {category: ..., title: ... } into variable fanatasies.
+4.
+let arr = fantasies.toArray() // convert cursor to array
+// instead of this long command:
+for(mov of arr){print(function(str){return str.split(/([\. -])/).map(w => w === '' ? '' : w[0].toUpperCase() + w.slice(1).toLowerCase()).join("")}(mov.title) + ' ' + mov.category.toUpperCase())}
+// we write a named function capitalize() in a separate file, utils.js
+// and load it:
+load("./utils.js") // if pwd() is mongo-feladat-03
+for(mov of arr){print(capitalize(mov.title) + ' ' + mov.category.toUpperCase())} // print name and category; we need to apply capitalize to titles stored in uppercase.
+5.
+let titles = db.movies.find({},{_id:0,title:1}) // save a cursor with elements { title: ... } into variable titles.
+let titleArr = titles.toArray()
+for(mov of titleArr.reverse()){print(capitalize(mov.title))}
+// sorting is easier with builtin methods:
+db.movies.find({},{_id:0,title:1}).sort({title: -1})
+6.
+db.movies.find({},{_id:0,category:1,title:1,releaseYear:1}).sort({category: 1, releaseYear: -1})
+// sorting is easier with builtin methods. Also possible:
+let movies = db.movies.find({},{_id:0,category:1,title:1,releaseYear:1}) // save a cursor with elements {category: ..., title: ..., releaseYear: ... } into variable movies. 
+let movieArr = movies.toArray() // convert cursor to array
+for(mov of movieArr.sort(movieCompare)){printjson(mov)} // notice printjson
+// for(mov of movieArr.sort(movieCompare)){print(mov)} // this gives only a list of [BSONOBJECT]
+7.
+db.movies.find({category:"action"}).sort({releaseYear: 1}).limit(1) // oldest movie from category action
+8.
+db.movies.find({}).sort({releaseYear: 1}).limit(2) // oldest two movies
+9.
+db.movies.find({category:"romantic"},{_id:0,title:1,releaseYear:1}).sort({releaseYear: 1}).skip(1).limit(1)
+10.
+load("./paging.js")
+
+
+
+
