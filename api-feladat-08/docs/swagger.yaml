@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+    version: 1.0.0
+    title: Egészségügyi Szuri Tár
+    description: Oltások nyilvántartása
+servers: 
+  - url: http://localhost:3000
+paths:
+    /person:
+        get:
+            description: Returns a list of persons
+            responses:
+                '200':
+                    description: List of persons successfully returned
+                    content:
+                        application/json:
+                            schema:
+                            type: array
+    /person/count:
+        get:
+            description: Returns number of persons
+            responses:
+                '200':
+                    description: Number of persons successfully returned
+                    content:
+                        application/json:
+                            schema:
+                            type: number
+    /person/vaccinated:
+        get:
+            description: Returns number of vaccinated persons
+            responses:
+                '200':
+                    description: Number of vaccinated persons successfully returned
+                    content:
+                        application/json:
+                            schema:
+                            type: number

@@ -1,0 +1,7 @@
+{
+    "database": {
+        "userName": "esztUser",
+        "password": "Lq3iJDmckkL0KSNk",
+        "host": "cluster0.8y10s.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    }
+}
