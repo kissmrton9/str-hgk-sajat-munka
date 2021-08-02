@@ -45,7 +45,7 @@ router.put('/:id/:vaccine?',(req,res,next) => {
     return controller.update(req,res,next);   
 });
 
-router.delete('/:vaccine',(req,res) => {
+router.delete('/:vaccine?',(req,res) => {
     return controller.delete(req,res);
 });
 

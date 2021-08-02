@@ -5,13 +5,13 @@ exports.create = personData => {
     return person.save();
 };
 
-exports.findAll = () => Person.find().populate('vaccines');
+exports.findAll = () => Person.find().populate('vaccine.vaccine');
 
-exports.findNumberOfData = id => Person.estimatedDocumentCount();//.populate('vaccines');
+exports.findNumberOfData = id => Person.estimatedDocumentCount();
 
-exports.findNumberOfVaccinated = id => Person.countDocuments({vaccine: {$ne: null}});//.populate('vaccines');
+exports.findNumberOfVaccinated = id => Person.countDocuments({vaccine: {$ne: null}});
 
-exports.findOne = id => Person.findById(id);//.populate('vaccines');
+exports.findOne = id => Person.findById(id);
 
 exports.update = (id, updateData) => Person.findByIdAndUpdate(id, updateData, {new: true});
 

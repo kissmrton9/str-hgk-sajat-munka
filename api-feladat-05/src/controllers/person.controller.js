@@ -113,8 +113,8 @@ exports.update = ('/:id/:vaccine?',(req,res,next) => {
 });
 */
 
-exports.delete = ('/:vaccine',(req,res) => {
-    personService.deletePersonsWithSpecifiedVaccine(req.params.vaccine)
+exports.delete = ('/:vaccine?',(req,res) => {
+    personService.deletePersonsWithSpecifiedVaccine(req.params.vaccine || null)
     .then(query => console.log('Item(s) deleted'))
     .catch( (err) => new createError.InternalServerError(err.message) );
 });

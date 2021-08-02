@@ -1,26 +1,20 @@
+
 A kész feladat feltöltésének helye:
 
 Repo: str-hgk-sajat-munka
 
-Almappa: api-feladat-01
+Almappa: api-feladat-05
 
-Például: http://github.com/cherryApp/str-hgk-sajat-munka/api-feladat-01
+Például: http://github.com/cherryApp/str-hgk-sajat-munka/api-feladat-05
 
 
-Gyakorlófeladat
+Módosítsuk az egyszerű, működő ESZT (Egészségügyi Szuri Tár) API alkalmazást úgy, hogy MongoDB-t használjon az adatok tárolására.
 
-Készíts egy egyszerű, működő ESZT (Egészségügyi Szuri Tár) API alkalmazást, amellyel nyilvántarthatjuk, melyik személy milyen védőoltást kapott az országban.
+    Hozz létre egy új MongoDB adatbázist! (használhatsz Atlas-t vagy akár lokális MongoDB példányt is)
+    Telepítsd a szükséges csomagokat, készítsd el a Person sémát!
+    Módosítsd a tanult módon az alkalmazást, hogy az a MongoDB-hez csatlakozzon, töröld a JSON adatbázist!
+    Módosítsd a végpontokat, hogy az adatbázissal dolgozzanak!
 
-    Készíts egy ideiglenes JSON fájl adatbázist, amely a személyeket tartalmazza, minden személy rendelkezzen az alábbi adatokkal:
-        id: egyedi azonosító (number)
-        firstName: keresztnév (string)
-        lastName: vezetéknév (string)
-        vaccine: milyen típusú oltást kapott a személy (string) (elhagyható, ha valaki még nem kapott oltást)
-    Implementáld a GET /person/count végpontot, amely visszaadja az oltott személyek számát.
-    Implementáld a GET /person/vaccinated végpontot, amely csak a beoltott személyek adatait adja vissza.
-    Készíts egy egyszerű Swagger dokumentációt az elkészült API alkalmazáshoz.
-
-    Az útvonalválasztást express.Router segítségével oldd meg!
-    Az adatbázis egy darab JSON fájl legyen!
-    Minden elkészült végpontot tesztelj böngésző segítségével!
+        Tipp 1: countDocuments() elemek számolásához
+        Tipp 2: $exists operátor
 

@@ -73,12 +73,13 @@ controller.put('/:id/:vaccine?',(req,res,next) => {
     // else return res.status(400).send('BadRequestError: No such person'); 
 });
 
-controller.delete('/:vaccine',(req,res) => {
-    //data = data.filter(item => item.vaccine !== req.params.vaccine);
+controller.delete('/:vaccine?',(req,res) => {
+    const vaccine = req.params.vaccine || null;
+    //data = data.filter(item => item.vaccine !== vaccine);
     // fails if data is declared as const
     //let n = data.length
     for(i=0;i<data.length;i++){
-        if(data[i].vaccine === req.params.vaccine){
+        if(data[i].vaccine === vaccine){
             data.splice(i,1);
         }
     }
